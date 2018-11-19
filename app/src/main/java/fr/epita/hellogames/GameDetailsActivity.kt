@@ -33,11 +33,11 @@ class GameDetailsActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Game>, response: Response<Game>) {
                 if (response.code() == 200) {
                     val data : Game = response.body()!!
-                    game_name.text = "Name: " + data.name
-                    game_type.text = "Type: " + data.type
-                    game_players.text = "Players: " + data.players.toString()
-                    game_year.text = "year: " + data.year.toString()
-                    game_desc.text = "Description : " + data.description_en
+                    game_name.text = data.name
+                    game_type.text = data.type
+                    game_players.text = data.players.toString()
+                    game_year.text = data.year.toString()
+                    game_desc.text = data.description_en
                 }
             }
         }
