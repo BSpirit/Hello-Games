@@ -17,16 +17,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-        val retrofitClient = Retrofit.Builder()
+        private val retrofitClient = Retrofit.Builder()
             .baseUrl("https://androidlessonsapi.herokuapp.com/api/")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
 
-        val service = retrofitClient.create(GameWSInterface::class.java)
+        private val service = retrofitClient.create(GameWSInterface::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
 
         val callback : Callback<List<Game>> = object : Callback<List<Game>> {
             override fun onFailure(call: Call<List<Game>>, t: Throwable) {
@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         service.getGames().enqueue(callback)
+        setContentView(R.layout.activity_main)
     }
 
 
