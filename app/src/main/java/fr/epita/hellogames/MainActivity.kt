@@ -34,23 +34,20 @@ class MainActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<List<Game>>, response: Response<List<Game>>) {
                 if (response.code() == 200) {
-                    val data : List<Game> = response.body()!!
 
-                    val game1 = data.random()
-                    game1_btn.text = game1.name
-                    game1_btn.setOnClickListener(GameBtnListener(game1.id))
+                    val games = response.body()!!.shuffled().take(4)
 
-                    val game2 = data.random()
-                    game2_btn.text = game2.name
-                    game2_btn.setOnClickListener(GameBtnListener(game2.id))
+                    game1_btn.text = games[0].name
+                    game1_btn.setOnClickListener(GameBtnListener(games[0].id))
 
-                    val game3 = data.random()
-                    game3_btn.text = game3.name
-                    game3_btn.setOnClickListener(GameBtnListener(game3.id))
+                    game2_btn.text = games[1].name
+                    game2_btn.setOnClickListener(GameBtnListener(games[1].id))
 
-                    val game4 = data.random()
-                    game4_btn.text = game4.name
-                    game4_btn.setOnClickListener(GameBtnListener(game4.id))
+                    game3_btn.text = games[2].name
+                    game3_btn.setOnClickListener(GameBtnListener(games[2].id))
+
+                    game4_btn.text = games[3].name
+                    game4_btn.setOnClickListener(GameBtnListener(games[3].id))
                 }
             }
         }
