@@ -12,7 +12,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.random.Random
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,9 +59,39 @@ class MainActivity : AppCompatActivity() {
     inner class GameBtnListener(val gameId : Int) : View.OnClickListener {
 
         override fun onClick(v: View?) {
-            val explicitIntent = Intent(this@MainActivity, GameDetailsActivity::class.java)
-            explicitIntent.putExtra("gameId", gameId)
-            startActivity(explicitIntent)
+
+            Toast.makeText(this@MainActivity, "Loading data...", Toast.LENGTH_SHORT).show()
+
+            val retrofitClient = Retrofit.Builder()
+                .baseUrl("https://androidlessonsapi.herokuapp.com/api/")
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+                .build()
+
+            val service = retrofitClient.create(GameWSInterface::class.java)
+
+            val callback : Callback<Game> = object : Callback<Game> {
+                override fun onFailure(call: Call<Game>, t: Throwable) {
+                    Toast.makeText(this@MainActivity, "Not working: " + t.message, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onResponse(call: Call<Game>, response: Response<Game>) {
+                    if (response.code() == 200) {
+
+                        val game = response.body()!!
+
+                        val explicitIntent = Intent(this@MainActivity, GameDetailsActivity::class.java)
+                        explicitIntent.putExtra("name", game.name)
+                        explicitIntent.putExtra("type", game.type)
+                        explicitIntent.putExtra("players", game.players.toString())
+                        explicitIntent.putExtra("year", game.year.toString())
+                        explicitIntent.putExtra("desc", game.description_en)
+                        startActivity(explicitIntent)
+                    }
+                }
+            }
+
+
+            service.getGameDetails(gameId).enqueue(callback)
         }
     }
 }
