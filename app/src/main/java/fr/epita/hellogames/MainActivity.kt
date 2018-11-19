@@ -3,6 +3,7 @@ package fr.epita.hellogames
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.google.gson.GsonBuilder
@@ -16,16 +17,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
         val retrofitClient = Retrofit.Builder()
             .baseUrl("https://androidlessonsapi.herokuapp.com/api/")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
 
         val service = retrofitClient.create(GameWSInterface::class.java)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         val callback : Callback<List<Game>> = object : Callback<List<Game>> {
             override fun onFailure(call: Call<List<Game>>, t: Throwable) {
@@ -59,15 +60,6 @@ class MainActivity : AppCompatActivity() {
     inner class GameBtnListener(val gameId : Int) : View.OnClickListener {
 
         override fun onClick(v: View?) {
-
-            Toast.makeText(this@MainActivity, "Loading data...", Toast.LENGTH_SHORT).show()
-
-            val retrofitClient = Retrofit.Builder()
-                .baseUrl("https://androidlessonsapi.herokuapp.com/api/")
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-                .build()
-
-            val service = retrofitClient.create(GameWSInterface::class.java)
 
             val callback : Callback<Game> = object : Callback<Game> {
                 override fun onFailure(call: Call<Game>, t: Throwable) {
